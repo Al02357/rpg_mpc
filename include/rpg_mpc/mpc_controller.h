@@ -43,7 +43,7 @@
 #include "rpg_mpc/mpc_params.h"
 
 namespace rpg_mpc {
-
+//10个状态：位置*3，速度*3，姿态（四元数）*4
 enum STATE {
   kPosX = 0,
   kPosY = 1,
@@ -56,7 +56,7 @@ enum STATE {
   kVelY = 8,
   kVelZ = 9
 };
-
+//4个输入：推力+yaw_rate*3(?)
 enum INPUT {
   kThrust = 0,
   kRateX = 1,
@@ -69,12 +69,12 @@ class MpcController {
 public:
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
+//检查size是否符合
   static_assert(kStateSize == 10,
                 "MpcController: Wrong model size. Number of states does not match.");
   static_assert(kInputSize == 4,
                 "MpcController: Wrong model size. Number of inputs does not match.");
-
+// 构造函数
   MpcController(const ros::NodeHandle& nh,
                 const ros::NodeHandle& pnh,
                 const std::string& topic = "mpc/trajectory_predicted");

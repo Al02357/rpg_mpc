@@ -27,7 +27,7 @@
 #include <ctime>
 
 namespace rpg_mpc {
-
+//类MpcController构造函数
 template<typename T>
 MpcController<T>::MpcController(
     const ros::NodeHandle& nh, const ros::NodeHandle& pnh, const std::string& topic) :
@@ -43,13 +43,11 @@ MpcController<T>::MpcController(
     predicted_states_(Eigen::Matrix<T, kStateSize, kSamples + 1>::Zero()),
     predicted_inputs_(Eigen::Matrix<T, kInputSize, kSamples>::Zero()),
     point_of_interest_(Eigen::Matrix<T, 3, 1>::Zero()) {
-  pub_predicted_trajectory_ =
-      nh_.advertise<nav_msgs::Path>(topic, 1);
-
-  sub_point_of_interest_ = nh_.subscribe("mpc/point_of_interest", 1,
-                                         &MpcController<T>::pointOfInterestCallback, this);
-  sub_autopilot_off_ = nh_.subscribe("autopilot/off", 1,
-                                     &MpcController<T>::offCallback, this);
+  // ROS_PUB
+  pub_predicted_trajectory_ = nh_.advertise<nav_msgs::Path>(topic, 1);
+  // ROS_SUB
+  sub_point_of_interest_        = nh_.subscribe("mpc/point_of_interest", 1, &MpcController<T>::pointOfInterestCallback, this);
+  sub_autopilot_off_                 = nh_.subscribe("autopilot/off", 1, &MpcController<T>::offCallback, this);
 
   if (!params_.loadParameters(pnh_)) {
     ROS_ERROR("[%s] Could not load parameters.", pnh_.getNamespace().c_str());
@@ -61,6 +59,7 @@ MpcController<T>::MpcController(
   solve_from_scratch_ = true;
   preparation_thread_ = std::thread(&MpcWrapper<T>::prepare, mpc_wrapper_);
 }
+//end 
 
 template<typename T>
 void MpcController<T>::pointOfInterestCallback(
